@@ -9,9 +9,9 @@ const router = express.Router();
 
 router.get('/',authenticationToken, async (req, res)=>{
     try{
-        const [results] = await pool.query('SELECT * FROM users'); // Use destructuring to get rows
+        const [results] = await pool.query('SELECT * FROM users'); 
         // we want to pass all this infor in users as json objects
-        res.json({results:results}); // Assuming 'results' is now the array of rows
+        res.json({results:results}); 
     }catch(error){
         res.status(500).json({error:error.message});
     }
