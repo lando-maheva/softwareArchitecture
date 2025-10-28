@@ -44,10 +44,6 @@ router.post('/', async (req,res)=>{
                 user: newUserRows[0]
             });
         }
-        
-        // Fallback if the retrieval failed after a successful insert
-        res.status(500).json({ error: 'User registration failed (no row found after insert).' });
-
     } catch (error) {
         res.status(500).json({error:error.message});
         

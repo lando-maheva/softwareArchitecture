@@ -1,18 +1,21 @@
+const api_url = '/v1/api'; 
+
 async function login(event) {
-    event.preventDefault(); //To stop the page from reloading
+    event.preventDefault(); //to stop the page from reloading
 
     // get data from the form 
     const formData = new FormData(event.target);
     const data = Object.fromEntries(formData.entries()); 
     
-    // Check if the form is sending username/password keys that match the backend
+    // Check if the form is sending username/password keys that match the db
     console.log("Attempting login with data:", data); 
 
     try {
         //to send request to the backend, we use fetch api
         const res = await fetch(`${api_url}/auth/login`, {
             method: 'POST',
-            credentials: 'include', // Important since we are using HttpOnly Cookies
+           
+            credentials: 'include', 
             headers: {
                 'Content-Type': 'application/json'
             },
@@ -22,26 +25,30 @@ async function login(event) {
         // to handle non-successful response ( 401 Unauthorized), we check res.ok
         if (!res.ok) {
             const error = await res.json();
+            console.error(error);
             alert(`Login Failed: ${error.message || 'Invalid credentials'}`);
             return;
         }
 
-        // to  extract the access token from the successful response, we parse the json body (parse means convert from json string to json objects)
+        // to extract the tokens from the successful response
         const responseData = await res.json();
         
-        // The jwt payload must be structured to contain the token
-        const jwtToken = responseData.token; 
+        //extract accessToken and refreshToken matching the db
+        const accessToken = responseData.accessToken; 
+        const refreshToken = responseData.refreshToken; 
         
-        if (jwtToken) {
-            // Store the Token (Using Local Storage for simplicity; we can consider more secure storage for production)
-            localStorage.setItem('jwtToken', jwtToken); 
+        if (accessToken) {
+            // Store the Tokens (we use the Local Storage for simplicity)
+            localStorage.setItem('accessToken', accessToken); 
             
-            // Redirect or Update UI
-            alert('Login Successful!');
+            
+            localStorage.setItem('refreshToken', refreshToken); 
+            
+            // redirect or Update frontend
+            alert('Login Successful! Tokens stored.');
         
-            
         } else {
-             alert('Login Failed: Token not received from server.');
+             alert('Login Failed: Access token not received from server.');
         }
 
     } catch (error) {
@@ -49,31 +56,34 @@ async function login(event) {
         alert('An unexpected error occurred during login.');
     }
 }
+
 async function fetchProtectedData() {
-    //  Retrieve the stored token
-    const token = localStorage.getItem('jwtToken'); 
+    //  retrieve the stored access token
+    const token = localStorage.getItem('accessToken'); 
 
     if (!token) {
-        console.error("No token found. User is not logged in.");
-        // Redirect to login page
+        console.error("No access token found. User is not logged in.");
+        // redirect to login page
         return; 
     }
 
     try {
-        const res = await fetch(`${api_url}/api/login`, {
+       
+        const res = await fetch(`${api_url}/users`, { 
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-               
+                // use the access token for autho
                 'Authorization': `Bearer ${token}` 
             }
         });
 
         if (!res.ok) {
-            // If the server returns 401/403, the token is invalid or expired
-            console.error('Access Denied or Token Expired.');
-            localStorage.removeItem('jwtToken'); 
-            // Redirect to login
+            // if the server returns 401/403, the token is invalid or expired
+            console.error('Access Denied or Token Expired. Removing token.');
+            localStorage.removeItem('accessToken'); 
+            localStorage.removeItem('refreshToken');
+            // redirect to login
             return;
         }
 
@@ -84,3 +94,6 @@ async function fetchProtectedData() {
         console.error('Error fetching protected data:', error);
     }
 }
+
+// Ensure you link the login function to your form submission event
+// Example: document.getElementById('login-form').addEventListener('submit', login);
