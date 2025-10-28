@@ -9,7 +9,7 @@ const router = express.Router();
 
 router.get('/',authenticationToken, async (req, res)=>{
     try{
-        const [results] = await pool.query('SELECT * FROM users'); // Use destructuring to get rows
+        const [results] = await pool.query('SELECT * FROM users');
         // we want to pass all this infor in users as json objects
         res.json({results:results}); 
     }catch(error){
@@ -24,7 +24,7 @@ router.post('/', async (req,res)=>{
         const hashedPassword = await bcrypt.hash(req.body.password,10)
         
         //we want to create a new user
-        // Use destructuring to get the result object from the INSERT query
+        
         const [insertResult] = await pool.query(
             'INSERT INTO users(firstname,lastname,email,DOB,password) VALUES(?,?,?,?,?)',
             [req.body.firstname,req.body.lastname, req.body.email,req.body.DOB, hashedPassword]
