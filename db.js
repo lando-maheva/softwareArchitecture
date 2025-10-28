@@ -5,8 +5,8 @@ import mysql from 'mysql2/promise';
 const {Pool} = mysql;
 //setup the local pool config with user,password,host,port and database name
 let localPoolConfig = {
-    user:'root',
-    password:'',
+    user:'user',
+    password:'mysqlpassword',
     host:'localhost',
     port:3306,
     database:'softwareArchitecture'

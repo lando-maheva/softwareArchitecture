@@ -1,0 +1,28 @@
+POST http://localhost:5000/api/Users
+Content-Type: application/json
+
+{
+    "firstname":"bless",
+    "lastname":"his",
+    "email":"2002-12-12",
+    "DOB":"2022-12-12",
+    "password":"bless123"
+
+}
+###
+POST http://localhost:5000/api/auth/login
+Content-Type: application/json
+
+{
+    
+    "email":"bless@gmail.com",
+    "password":"bless123"
+
+}
+###
+GET http://localhost:5000/api/Users
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNmRhYTgwMGItODU0My00ZTkzLWExOGItZGUwNmQzZTg1MTJkIiwidXNlcl9uYW1lIjoiYmxlc3MiLCJ1c2VyX2VtYWlsIjoiYmxlc3NAZ21haWwuY29tIiwiaWF0IjoxNzU5OTM0MjE0LCJleHAiOjE3NTk5MzQyNzR9.zNEcYYwX61xqbPo9CmD3CnsY85J8_OaD59_VkgKbSdA
+
+
+###
+GET http://localhost:5000/api/auth/refresh_token
