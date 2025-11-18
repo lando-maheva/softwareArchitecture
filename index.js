@@ -8,6 +8,7 @@ import {dirname,join} from 'path';
 import { fileURLToPath } from 'url';
 import usersRouter from './routes/users-route.js';
 import authRouter from './routes/auth-routes.js';
+import transRouter from './routes/trans-routes.js'
 
 // call dotenv which looks for an env file and pull in any anv variable from that file
 
@@ -37,5 +38,7 @@ app.use(cookieParser());
 app.use('/', express.static(join(__dirname,'public')));
 app.use('/v1/api/users', usersRouter)
 app.use('/v1/api/auth', authRouter)
+app.use('/v1/api/transactions', transRouter)
+
 // now our app can start listening
 app.listen(PORT, ()=>console.log(`server is listening on ${PORT} `))

@@ -24,6 +24,7 @@ const pool = mysql.createPool(poolConfig);
 export default pool;
 
 //these are steps we need inorder to conn
+//let create the card schema and transaction schemas
 
 
 
