@@ -11,13 +11,24 @@ CREATE TABLE users(
 );
 CREATE TABLE cards(
     card_id CHAR(36) PRIMARY KEY DEFAULT UUID(),
-    user_id CHAR(36),
-    card_number VARCHAR(16) NOT NULL UNIQUE,
+    user_id CHAR(36) NOT NULL,
+    balance DECIMAL(65) NOT NULL,
     cardholder_name TEXT NOT NULL,
-    --cvv VARCHAR(4) NOT NULL, // SHOULD BE ENCRIPTED IT IS THE CARD SECURITY CODE(CARD VERIFICATION VALUE)
-    expiry_date VARCHAR(5) NOT NULL,
-    FOREIGN KEY 
-) ;
+    is_active BOOLEAN NOT NULL DEFAULT TRUE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    card_number VARCHAR(16) NOT NULL UNIQUE,
+
+    FOREIGN KEY (user_id) REFERENCES users(user_id) 
+);
+CREATE TABLE transactions(
+    transactions_id CHAR(36) PRIMARY KEY DEFAULT UUID(),
+    card_id CHAR(36) NOT NULL, 
+    amount DECIMAL(18, 2) NOT NULL, 
+    status VARCHAR(36) NOT NULL,
+    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    
+    FOREIGN KEY (card_id) REFERENCES cards(card_id) 
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 SELECT * FROM users;
 
